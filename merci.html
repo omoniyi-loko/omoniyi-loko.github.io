@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merci | Atelier Démo</title>
+<link rel="stylesheet" href="style.css">
+<script src="catalogue.js"></script>
+<script src="site.js"></script>
+</head>
+<body>
+<div class="bandeau-test">Site de démonstration pour tests de tracking. Aucune vente réelle.</div>
+<header>
+  <a class="logo" href="index.html">Atelier Démo</a>
+  <a href="panier.html">Panier (<span id="compteur-panier">0</span>)</a>
+</header>
+<main>
+<h1>Merci pour ta commande</h1>
+<div id="recap"></div>
+<script>
+var commande = [];
+try { commande = JSON.parse(sessionStorage.getItem("commande") || "[]"); } catch (e) {}
+var zone = document.getElementById("recap");
+if (!commande.length) {
+  zone.innerHTML = "<p>Aucune commande en cours. <a href=\"index.html\">Retour aux produits</a></p>";
+} else {
+  var tid = "T-" + Date.now();
+  var total = totalPanier(commande);
+  zone.innerHTML = "<p>Commande " + tid + " : " + euros(total) + " (simulation, rien n’est débité).</p>";
+  pushEcommerce("purchase", {
+    transaction_id: tid, currency: "EUR", value: total, shipping: 0, tax: +(total - total / 1.2).toFixed(2),
+    items: commande.map(function (l) { return toItem(getProduit(l.id), l.qte); })
+  });
+  // Évite un double purchase si la page est rechargée
+  try { sessionStorage.removeItem("commande"); } catch (e) {}
+  ecrirePanier([]);
+}
+</script>
+</main>
+<footer>Atelier Démo, site de test · <a href="infos.html">Livraison, retours et contact</a></footer>
+</body>
+</html>

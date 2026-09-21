@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Produit | Atelier Démo</title>
+<link rel="stylesheet" href="style.css">
+<script src="catalogue.js"></script>
+<script src="site.js"></script>
+</head>
+<body>
+<div class="bandeau-test">Site de démonstration pour tests de tracking. Aucune vente réelle.</div>
+<header>
+  <a class="logo" href="index.html">Atelier Démo</a>
+  <a href="panier.html">Panier (<span id="compteur-panier">0</span>)</a>
+</header>
+<main>
+<div id="fiche"></div>
+<script>
+var id = new URLSearchParams(location.search).get("id");
+var p = getProduit(id);
+var zone = document.getElementById("fiche");
+if (!p) {
+  zone.innerHTML = "<p>Produit introuvable. <a href=\"index.html\">Retour aux produits</a></p>";
+} else {
+  document.title = p.nom + " | Atelier Démo";
+  zone.innerHTML =
+    "<div class=\"fiche\"><div class=\"visuel\">" + p.categorie + "</div><div>" +
+    "<h1>" + p.nom + "</h1><p class=\"prix\">" + euros(p.prix) + "</p>" +
+    "<p>Référence : " + p.id + "</p><p>En stock. Livraison en 3 à 5 jours ouvrés.</p>" +
+    "<label>Quantité <input id=\"qte\" type=\"number\" min=\"1\" value=\"1\" style=\"width:60px\"></label> " +
+    "<button id=\"btn-ajout\">Ajouter au panier</button><p id=\"confirm\"></p></div></div>";
+  document.getElementById("btn-ajout").addEventListener("click", function () {
+    var q = Math.max(1, parseInt(document.getElementById("qte").value, 10) || 1);
+    ajouterAuPanier(p.id, q);
+    document.getElementById("confirm").innerHTML = "Ajouté au panier. <a href=\"panier.html\">Voir le panier</a>";
+  });
+  // Données structurées (lues par Google et Merchant Center)
+  var ld = document.createElement("script");
+  ld.type = "application/ld+json";
+  ld.text = JSON.stringify({
+    "@context": "https://schema.org/", "@type": "Product", name: p.nom, sku: p.id,
+    brand: { "@type": "Brand", name: p.marque },
+    offers: { "@type": "Offer", price: p.prix.toFixed(2), priceCurrency: "EUR", availability: "https://schema.org/InStock", url: location.href }
+  });
+  document.head.appendChild(ld);
+  pushEcommerce("view_item", { currency: "EUR", value: p.prix, items: [toItem(p, 1)] });
+}
+</script>
+</main>
+<footer>Atelier Démo, site de test · <a href="infos.html">Livraison, retours et contact</a></footer>
+</body>
+</html>

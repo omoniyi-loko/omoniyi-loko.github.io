@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accueil | Atelier Démo</title>
+<link rel="stylesheet" href="style.css">
+<script src="catalogue.js"></script>
+<script src="site.js"></script>
+</head>
+<body>
+<div class="bandeau-test">Site de démonstration pour tests de tracking. Aucune vente réelle.</div>
+<header>
+  <a class="logo" href="index.html">Atelier Démo</a>
+  <a href="panier.html">Panier (<span id="compteur-panier">0</span>)</a>
+</header>
+<main>
+<h1>Nos produits</h1>
+<div class="grille" id="grille"></div>
+<script>
+var grille = document.getElementById("grille");
+window.CATALOGUE.forEach(function (p) {
+  var a = document.createElement("a");
+  a.className = "carte"; a.href = "produit.html?id=" + p.id;
+  a.innerHTML = "<div class=\"visuel\">" + p.categorie + "</div><div>" + p.nom + "</div><div class=\"prix\">" + euros(p.prix) + "</div>";
+  a.addEventListener("click", function () {
+    pushEcommerce("select_item", { item_list_id: "accueil", item_list_name: "Accueil", items: [toItem(p, 1)] });
+  });
+  grille.appendChild(a);
+});
+pushEcommerce("view_item_list", {
+  item_list_id: "accueil", item_list_name: "Accueil",
+  items: window.CATALOGUE.map(function (p, i) { return toItem(p, 1, i); })
+});
+</script>
+</main>
+<footer>Atelier Démo, site de test · <a href="infos.html">Livraison, retours et contact</a></footer>
+</body>
+</html>

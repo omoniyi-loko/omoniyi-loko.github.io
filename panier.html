@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panier | Atelier Démo</title>
+<link rel="stylesheet" href="style.css">
+<script src="catalogue.js"></script>
+<script src="site.js"></script>
+</head>
+<body>
+<div class="bandeau-test">Site de démonstration pour tests de tracking. Aucune vente réelle.</div>
+<header>
+  <a class="logo" href="index.html">Atelier Démo</a>
+  <a href="panier.html">Panier (<span id="compteur-panier">0</span>)</a>
+</header>
+<main>
+<h1>Panier</h1>
+<div id="contenu"></div>
+<script>
+var panier = lirePanier();
+var zone = document.getElementById("contenu");
+if (!panier.length) {
+  zone.innerHTML = "<p>Ton panier est vide. <a href=\"index.html\">Voir les produits</a></p>";
+} else {
+  var html = "<table><tr><th>Produit</th><th>Qté</th><th>Prix</th></tr>";
+  panier.forEach(function (l) { var p = getProduit(l.id); html += "<tr><td>" + p.nom + "</td><td>" + l.qte + "</td><td>" + euros(p.prix * l.qte) + "</td></tr>"; });
+  html += "<tr><th colspan=\"2\">Total</th><th>" + euros(totalPanier(panier)) + "</th></tr></table>";
+  html += "<p><button id=\"btn-commande\">Valider la commande (simulation)</button></p>";
+  zone.innerHTML = html;
+  var items = panier.map(function (l) { return toItem(getProduit(l.id), l.qte); });
+  pushEcommerce("view_cart", { currency: "EUR", value: totalPanier(panier), items: items });
+  document.getElementById("btn-commande").addEventListener("click", function () {
+    pushEcommerce("begin_checkout", { currency: "EUR", value: totalPanier(panier), items: items });
+    try { sessionStorage.setItem("commande", JSON.stringify(panier)); } catch (e) {}
+    setTimeout(function () { location.href = "merci.html"; }, 300);
+  });
+}
+</script>
+</main>
+<footer>Atelier Démo, site de test · <a href="infos.html">Livraison, retours et contact</a></footer>
+</body>
+</html>
