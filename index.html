@@ -22,7 +22,7 @@ var grille = document.getElementById("grille");
 window.CATALOGUE.forEach(function (p) {
   var a = document.createElement("a");
   a.className = "carte"; a.href = "produit.html?id=" + p.id;
-  a.innerHTML = "<div class=\"visuel\">" + p.categorie + "</div><div>" + p.nom + "</div><div class=\"prix\">" + euros(p.prix) + "</div>";
+  a.innerHTML = visuel(p) + "<div>" + p.nom + "</div><div class=\"prix\">" + euros(p.prix) + "</div>";
   a.addEventListener("click", function () {
     pushEcommerce("select_item", { item_list_id: "accueil", item_list_name: "Accueil", items: [toItem(p, 1)] });
   });

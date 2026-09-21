@@ -59,3 +59,10 @@ function majCompteur() {
   if (el) el.textContent = lirePanier().reduce(function (s, l) { return s + l.qte; }, 0);
 }
 document.addEventListener("DOMContentLoaded", majCompteur);
+
+// ---------- Visuel produit ----------
+// Cherche images/<ID>.jpg (ex. images/AD-001.jpg). Si l'image n'existe pas, affiche le cadre gris.
+function visuel(p) {
+  return "<div class=\"visuel\"><img src=\"images/" + p.id + ".jpg\" alt=\"" + p.nom.replace(/"/g, "") +
+    "\" style=\"width:100%;height:100%;object-fit:cover\" onerror=\"this.replaceWith(document.createTextNode('" + p.categorie + "'))\"></div>";
+}

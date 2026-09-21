@@ -25,7 +25,7 @@ if (!p) {
 } else {
   document.title = p.nom + " | Atelier Démo";
   zone.innerHTML =
-    "<div class=\"fiche\"><div class=\"visuel\">" + p.categorie + "</div><div>" +
+    "<div class=\"fiche\">" + visuel(p) + "<div>" +
     "<h1>" + p.nom + "</h1><p class=\"prix\">" + euros(p.prix) + "</p>" +
     "<p>Référence : " + p.id + "</p><p>En stock. Livraison en 3 à 5 jours ouvrés.</p>" +
     "<label>Quantité <input id=\"qte\" type=\"number\" min=\"1\" value=\"1\" style=\"width:60px\"></label> " +
@@ -39,7 +39,7 @@ if (!p) {
   var ld = document.createElement("script");
   ld.type = "application/ld+json";
   ld.text = JSON.stringify({
-    "@context": "https://schema.org/", "@type": "Product", name: p.nom, sku: p.id,
+    "@context": "https://schema.org/", "@type": "Product", name: p.nom, sku: p.id, image: new URL("images/" + p.id + ".jpg", location.href).href,
     brand: { "@type": "Brand", name: p.marque },
     offers: { "@type": "Offer", price: p.prix.toFixed(2), priceCurrency: "EUR", availability: "https://schema.org/InStock", url: location.href }
   });
